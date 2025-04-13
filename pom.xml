@@ -47,7 +47,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.banking.Main</mainClass>
+                    <mainClass>com.banking.service.Main</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -68,7 +68,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>com.banking.Main</mainClass>
+                            <mainClass>com.banking.service.Main</mainClass>
                         </configuration>
                     </execution>
                 </executions>

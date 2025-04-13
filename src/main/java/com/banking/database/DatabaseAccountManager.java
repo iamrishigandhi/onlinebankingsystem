@@ -32,14 +32,22 @@ public class DatabaseAccountManager {
     }
 
     public Account getAccount(String accountNumber) throws InvalidAccountNumberException {
+        if (accountNumber == null || accountNumber.isEmpty()) {
+            throw new InvalidAccountNumberException("Account number cannot be empty.");
+        }
+        if (!accountNumber.matches("\\d+")) {
+            throw new InvalidAccountNumberException("Account number must contain only numeric characters.");
+        }
+        if (accountNumber.length() < 8) {
+            throw new InvalidAccountNumberException("Account number must be at least 8 digits long.");
+        }
+
         String sql = "SELECT * FROM accounts WHERE account_number = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setString(1, accountNumber);
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
                 return new Account(
                     rs.getString("account_number"),
@@ -48,14 +56,14 @@ public class DatabaseAccountManager {
                     rs.getDouble("balance")
                 );
             } else {
-                throw new InvalidAccountNumberException("Account number " + accountNumber + " is invalid");
+                throw new InvalidAccountNumberException("Account number " + accountNumber + " is invalid.");
             }
 
         } catch (SQLException e) {
             System.out.println("Error fetching account: " + e.getMessage());
             throw new InvalidAccountNumberException("Database error occurred while fetching account.");
         }
-    }
+    }    
 
     public boolean updateBalance(String accountNumber, double newBalance) {
         String sql = "UPDATE accounts SET balance = ? WHERE account_number = ?";

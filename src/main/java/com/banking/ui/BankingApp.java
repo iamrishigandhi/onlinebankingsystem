@@ -115,12 +115,20 @@ public class BankingApp extends Application {
             } catch (InvalidAccountNumberException ex) {
                 outputArea.appendText("Error: " + ex.getMessage() + "\n");
             }
-        });        
+        });
+
+        Button clearBtn = new Button("Clear All");
+        clearBtn.setOnAction(e -> {
+            accNumField.clear();
+            nameField.clear();
+            emailField.clear();
+            amountField.clear();
+        });
 
         // Layout
         VBox layout = new VBox(10,
                 accNumField, nameField, emailField, amountField,
-                new HBox(10, createBtn, depositBtn, withdrawBtn, viewBtn),
+                new HBox(10, createBtn, depositBtn, withdrawBtn, viewBtn, clearBtn),
                 outputArea
         );
         layout.setStyle("-fx-padding: 20;");
