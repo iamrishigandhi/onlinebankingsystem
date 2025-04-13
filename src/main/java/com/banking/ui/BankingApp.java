@@ -1,8 +1,7 @@
 package com.banking.ui;
 
 import com.banking.database.DatabaseAccountManager;
-import com.banking.exceptions.InsufficientFundsException;
-import com.banking.exceptions.InvalidAccountNumberException;
+import com.banking.exceptions.*;
 import com.banking.models.Account;
 
 import javafx.application.Application;
