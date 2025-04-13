@@ -37,7 +37,7 @@ public class Bank {
             acc.deposit(amount);
             return true;
         }
-        return false;  // Deposit failed (e.g., account not found or invalid amount)
+        return false;
     }
 
     // Withdraw money from an account
@@ -50,11 +50,11 @@ public class Bank {
                 return true;  // Withdrawal successful
             } catch (InsufficientFundsException e) {
                 // Handle insufficient funds
-                System.out.println("Error: " + e.getMessage());
+                System.out.println(e.getMessage());
                 return false;  // Withdrawal failed due to insufficient funds
             }
         }
-        return false;  // Withdrawal failed (e.g., account not found or invalid amount)
+        return false;
     }
 
     // Get an account by its number

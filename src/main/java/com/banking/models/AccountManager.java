@@ -2,7 +2,8 @@ package com.banking.models;
 
 import java.util.HashMap;
 
-import com.banking.exceptions.*;
+import com.banking.exceptions.InsufficientFundsException;
+import com.banking.exceptions.InvalidAccountNumberException;
 
 public class AccountManager {
     private final HashMap<String, Account> accounts;
@@ -24,7 +25,7 @@ public class AccountManager {
             }
 
         } catch (InvalidAccountNumberException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -63,7 +64,7 @@ public class AccountManager {
             try {
                 return acc.withdraw(amount);
             } catch (InsufficientFundsException e) {
-                System.out.println("Error: " + e.getMessage());
+                System.out.println(e.getMessage());
             }
         }
         return false;

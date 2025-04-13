@@ -2,6 +2,7 @@ package com.banking;
 
 import com.banking.database.DatabaseAccountManager;
 import com.banking.exceptions.InsufficientFundsException;
+import com.banking.exceptions.InvalidAccountNumberException;
 import com.banking.models.Account;
 
 import javafx.application.Application;
@@ -54,7 +55,7 @@ public class BankingApp extends Application {
                 if (success) {
                     outputArea.appendText("Account created successfully.\n");
                 } else {
-                    outputArea.appendText("Account creation failed. Maybe the account already exists.\n");
+                    outputArea.appendText("Account creation failed. The account already exists.\n");
                 }
 
             } catch (NumberFormatException ex) {
@@ -69,18 +70,15 @@ public class BankingApp extends Application {
                 double amount = Double.parseDouble(amountField.getText());
 
                 Account acc = dbManager.getAccount(num);
-                if (acc != null) {
-                    // Perform deposit
-                    acc.deposit(amount);
-                    dbManager.updateBalance(num, acc.getBalance());
-                    outputArea.appendText("Deposit successful. New Balance: " + acc.getBalance() + "\n");
+                acc.deposit(amount);
+                dbManager.updateBalance(num, acc.getBalance());
+                outputArea.appendText("Deposit successful. New Balance: " + acc.getBalance() + "\n");
+                amountField.clear();
 
-                    amountField.clear();  // Clear only the amountField
-                } else {
-                    outputArea.appendText("Account not found.\n");
-                }
             } catch (NumberFormatException ex) {
                 outputArea.appendText("Invalid amount.\n");
+            } catch (InvalidAccountNumberException ex) {
+                outputArea.appendText("Error: " + ex.getMessage() + "\n");
             }
         });
 
@@ -89,37 +87,35 @@ public class BankingApp extends Application {
             String num = accNumField.getText();
             try {
                 double amount = Double.parseDouble(amountField.getText());
-
-                Account acc = dbManager.getAccount(num);
-                if (acc != null) {
-                    try {
-                        // Perform withdrawal, this might throw InsufficientFundsException
-                        acc.withdraw(amount);
-                        dbManager.updateBalance(num, acc.getBalance());
-                        outputArea.appendText("Withdrawal successful. New Balance: " + acc.getBalance() + "\n");
-                    } catch (InsufficientFundsException ex) {
-                        outputArea.appendText("Error: " + ex.getMessage() + "\n");
-                    }
-                } else {
-                    outputArea.appendText("Account not found.\n");
+        
+                Account acc = dbManager.getAccount(num);  // May throw
+                try {
+                    acc.withdraw(amount);
+                    dbManager.updateBalance(num, acc.getBalance());
+                    outputArea.appendText("Withdrawal successful. New Balance: " + acc.getBalance() + "\n");
+                } catch (InsufficientFundsException ex) {
+                    outputArea.appendText("Error: " + ex.getMessage() + "\n");
                 }
-
-                amountField.clear();  // Clear only the amountField
+        
+                amountField.clear();
+        
             } catch (NumberFormatException ex) {
                 outputArea.appendText("Invalid amount.\n");
+            } catch (InvalidAccountNumberException ex) {
+                outputArea.appendText("Error: " + ex.getMessage() + "\n");
             }
         });
 
         Button viewBtn = new Button("View Account");
         viewBtn.setOnAction(e -> {
             String num = accNumField.getText();
-            Account acc = dbManager.getAccount(num);
-            if (acc != null) {
+            try {
+                Account acc = dbManager.getAccount(num);  // May throw
                 outputArea.appendText(acc.toString() + "\n");
-            } else {
-                outputArea.appendText("Account not found.\n");
+            } catch (InvalidAccountNumberException ex) {
+                outputArea.appendText("Error: " + ex.getMessage() + "\n");
             }
-        });
+        });        
 
         // Layout
         VBox layout = new VBox(10,

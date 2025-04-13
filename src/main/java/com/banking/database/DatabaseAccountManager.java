@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.banking.exceptions.InvalidAccountNumberException;
 import com.banking.models.Account;
 import com.banking.utils.DBUtil;
 
@@ -30,7 +31,7 @@ public class DatabaseAccountManager {
         }
     }
 
-    public Account getAccount(String accountNumber) {
+    public Account getAccount(String accountNumber) throws InvalidAccountNumberException {
         String sql = "SELECT * FROM accounts WHERE account_number = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -46,13 +47,14 @@ public class DatabaseAccountManager {
                     rs.getString("email"),
                     rs.getDouble("balance")
                 );
+            } else {
+                throw new InvalidAccountNumberException("Account number " + accountNumber + " is invalid");
             }
 
         } catch (SQLException e) {
             System.out.println("Error fetching account: " + e.getMessage());
+            throw new InvalidAccountNumberException("Database error occurred while fetching account.");
         }
-
-        return null;
     }
 
     public boolean updateBalance(String accountNumber, double newBalance) {
