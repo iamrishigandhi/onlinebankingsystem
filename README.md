@@ -61,7 +61,7 @@ onlinebankingsystem/
 
 3. Run the project:
    ```bash
-   mvn exec:java "-Dexec.mainClass=com.banking.Main"
+   mvn javafx:run
    ```
 
 ---
