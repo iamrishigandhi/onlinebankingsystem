@@ -3,7 +3,7 @@ package com.banking.models;
 import java.util.HashMap;
 
 public class AccountManager {
-    private HashMap<String, Account> accounts;
+    private final HashMap<String, Account> accounts;
 
     public AccountManager() {
         accounts = new HashMap<>();
@@ -45,8 +45,12 @@ public class AccountManager {
     public boolean withdrawFromAccount(String accountNumber, double amount) {
         Account acc = getAccount(accountNumber);
         if (acc != null) {
-            return acc.withdraw(amount);
+            try {
+                return acc.withdraw(amount);
+            } catch (InsufficientFundsException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
         }
         return false;
-    }
+    }    
 }

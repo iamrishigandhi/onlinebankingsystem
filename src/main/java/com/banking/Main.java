@@ -2,9 +2,12 @@ package com.banking;
 
 import com.banking.models.AccountManager;
 
+import javafx.application.Application;
+
 public class Main {
     public static void main(String[] args) {
         AccountManager manager = new AccountManager();
+        Application.launch(BankingApp.class, args);
 
         // Create some accounts
         manager.createAccount("1001", "Alice Smith", "alice@example.com", 500.0);

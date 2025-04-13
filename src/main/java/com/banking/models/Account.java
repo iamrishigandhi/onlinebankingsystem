@@ -1,9 +1,9 @@
 package com.banking.models;
 
 public class Account {
-    private String accountNumber;
-    private String accountHolderName;
-    private String email;
+    private final String accountNumber;
+    private final String accountHolderName;
+    private final String email;
     private double balance;
 
     public Account(String accountNumber, String accountHolderName, String email, double balance) {
@@ -36,12 +36,16 @@ public class Account {
         }
     }
 
-    public boolean withdraw(double amount) {
-        if (amount > 0 && balance >= amount) {
-            balance -= amount;
-            return true;
+    public boolean withdraw(double amount) throws InsufficientFundsException {
+        if (amount <= 0) {
+            System.out.println("Error: Withdrawal amount must be greater than zero.");
+            return false;
         }
-        return false;
+        if (balance < amount) {
+            throw new InsufficientFundsException("Error: Cannot withdraw more than the balance. Your balance is " + balance);
+        }
+        balance -= amount;
+        return true;
     }
 
     @Override
