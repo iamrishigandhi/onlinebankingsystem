@@ -1,4 +1,4 @@
-package com.banking;
+package com.banking.ui;
 
 import com.banking.database.DatabaseAccountManager;
 import com.banking.exceptions.InsufficientFundsException;

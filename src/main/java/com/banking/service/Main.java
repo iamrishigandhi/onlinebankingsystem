@@ -1,6 +1,7 @@
-package com.banking;
+package com.banking.service;
 
-import com.banking.models.*;
+import com.banking.models.AccountManager;
+import com.banking.ui.BankingApp;
 
 import javafx.application.Application;
 
