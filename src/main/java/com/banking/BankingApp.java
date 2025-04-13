@@ -1,7 +1,8 @@
 package com.banking;
 
+import com.banking.database.DatabaseAccountManager;
+import com.banking.exceptions.InsufficientFundsException;
 import com.banking.models.Account;
-import com.banking.models.AccountCreationResult;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -14,7 +15,7 @@ import javafx.stage.Stage;
 
 public class BankingApp extends Application {
 
-    private final Bank bank = new Bank();
+    private final DatabaseAccountManager dbManager = new DatabaseAccountManager();
 
     @Override
     public void start(Stage primaryStage) {
@@ -46,12 +47,16 @@ public class BankingApp extends Application {
             double amount;
             try {
                 amount = Double.parseDouble(amountField.getText());
-                AccountCreationResult result = bank.createAccount(num, name, email, amount);
-                outputArea.appendText(result.getMessage() + "\n");
-                // Clear only relevant fields if account was created successfully
-                if (result.isSuccess()) {
-                    amountField.clear();  // Clear amount field after account creation
+
+                // Create Account in the Database
+                Account account = new Account(num, name, email, amount);
+                boolean success = dbManager.createAccount(account);
+                if (success) {
+                    outputArea.appendText("Account created successfully.\n");
+                } else {
+                    outputArea.appendText("Account creation failed. Maybe the account already exists.\n");
                 }
+
             } catch (NumberFormatException ex) {
                 outputArea.appendText("Invalid deposit amount.\n");
             }
@@ -62,11 +67,17 @@ public class BankingApp extends Application {
             String num = accNumField.getText();
             try {
                 double amount = Double.parseDouble(amountField.getText());
-                boolean success = bank.deposit(num, amount);
-                outputArea.appendText(success ? "Deposit successful.\n" : "Deposit failed.\n");
-                // Optionally, clear only the amount field after a deposit
-                if (success) {
-                    amountField.clear();
+
+                Account acc = dbManager.getAccount(num);
+                if (acc != null) {
+                    // Perform deposit
+                    acc.deposit(amount);
+                    dbManager.updateBalance(num, acc.getBalance());
+                    outputArea.appendText("Deposit successful. New Balance: " + acc.getBalance() + "\n");
+
+                    amountField.clear();  // Clear only the amountField
+                } else {
+                    outputArea.appendText("Account not found.\n");
                 }
             } catch (NumberFormatException ex) {
                 outputArea.appendText("Invalid amount.\n");
@@ -78,12 +89,22 @@ public class BankingApp extends Application {
             String num = accNumField.getText();
             try {
                 double amount = Double.parseDouble(amountField.getText());
-                boolean success = bank.withdraw(num, amount);
-                outputArea.appendText(success ? "Withdrawal successful.\n" : "Withdrawal failed. Insufficient funds.\n");
-                // Optionally, clear only the amount field after a withdrawal
-                if (success) {
-                    amountField.clear();
+
+                Account acc = dbManager.getAccount(num);
+                if (acc != null) {
+                    try {
+                        // Perform withdrawal, this might throw InsufficientFundsException
+                        acc.withdraw(amount);
+                        dbManager.updateBalance(num, acc.getBalance());
+                        outputArea.appendText("Withdrawal successful. New Balance: " + acc.getBalance() + "\n");
+                    } catch (InsufficientFundsException ex) {
+                        outputArea.appendText("Error: " + ex.getMessage() + "\n");
+                    }
+                } else {
+                    outputArea.appendText("Account not found.\n");
                 }
+
+                amountField.clear();  // Clear only the amountField
             } catch (NumberFormatException ex) {
                 outputArea.appendText("Invalid amount.\n");
             }
@@ -92,20 +113,12 @@ public class BankingApp extends Application {
         Button viewBtn = new Button("View Account");
         viewBtn.setOnAction(e -> {
             String num = accNumField.getText();
-            Account acc = bank.getAccount(num);
+            Account acc = dbManager.getAccount(num);
             if (acc != null) {
                 outputArea.appendText(acc.toString() + "\n");
             } else {
                 outputArea.appendText("Account not found.\n");
             }
-        });
-
-        Button clearBtn = new Button("Clear Fields");
-        clearBtn.setOnAction(e -> {
-            accNumField.clear();
-            nameField.clear();
-            emailField.clear();
-            amountField.clear();
         });
 
         // Layout
@@ -119,5 +132,9 @@ public class BankingApp extends Application {
         Scene scene = new Scene(layout, 500, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

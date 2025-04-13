@@ -1,4 +1,4 @@
-package com.banking.models;
+package com.banking.exceptions;
 
 public class InvalidAccountNumberException extends Exception {
     public InvalidAccountNumberException(String message) {

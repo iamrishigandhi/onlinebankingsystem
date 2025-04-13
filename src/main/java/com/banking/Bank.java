@@ -3,25 +3,26 @@ package com.banking;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.banking.exceptions.InsufficientFundsException;
 import com.banking.models.Account;
 import com.banking.models.AccountCreationResult;
-import com.banking.models.InsufficientFundsException;
 
 public class Bank {
     private final Map<String, Account> accounts = new HashMap<>();
 
     // Create a new account
     public AccountCreationResult createAccount(String number, String name, String email, double initialDeposit) {
-    if (!isValidAccountNumber(number)) {
-        return new AccountCreationResult(false, "Account number must be exactly 8 digits and contain only numbers.");
-    }
+        if (!isValidAccountNumber(number)) {
+            return new AccountCreationResult(false, "Account number must be exactly 8 digits and contain only numbers.");
+        }
 
-    if (accounts.containsKey(number)) {
-        return new AccountCreationResult(false, "Account with this number already exists.");
-    }
+        if (accounts.containsKey(number)) {
+            return new AccountCreationResult(false, "Account with this number already exists.");
+        }
 
-    accounts.put(number, new Account(number, name, email, initialDeposit));
-    return new AccountCreationResult(true, "Account created successfully.");
+        // Create and store the new account
+        accounts.put(number, new Account(number, name, email, initialDeposit));
+        return new AccountCreationResult(true, "Account created successfully.");
     }
 
     // Account number validation method
@@ -36,7 +37,7 @@ public class Bank {
             acc.deposit(amount);
             return true;
         }
-        return false;
+        return false;  // Deposit failed (e.g., account not found or invalid amount)
     }
 
     // Withdraw money from an account
@@ -44,12 +45,16 @@ public class Bank {
         Account acc = accounts.get(number);
         if (acc != null && amount > 0) {
             try {
-                return acc.withdraw(amount);
+                // Try withdrawing the amount
+                acc.withdraw(amount);
+                return true;  // Withdrawal successful
             } catch (InsufficientFundsException e) {
+                // Handle insufficient funds
                 System.out.println("Error: " + e.getMessage());
+                return false;  // Withdrawal failed due to insufficient funds
             }
         }
-        return false;
+        return false;  // Withdrawal failed (e.g., account not found or invalid amount)
     }
 
     // Get an account by its number

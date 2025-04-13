@@ -1,5 +1,7 @@
 package com.banking.models;
 
+import com.banking.exceptions.InsufficientFundsException;
+
 public class Account {
     private final String accountNumber;
     private final String accountHolderName;
