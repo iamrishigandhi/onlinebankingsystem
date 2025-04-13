@@ -1,6 +1,7 @@
 package com.banking;
 
 import com.banking.models.Account;
+import com.banking.models.AccountCreationResult;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -10,7 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 
 public class BankingApp extends Application {
 
@@ -46,8 +46,12 @@ public class BankingApp extends Application {
             double amount;
             try {
                 amount = Double.parseDouble(amountField.getText());
-                boolean success = bank.createAccount(num, name, email, amount);
-                outputArea.appendText(success ? "Account created.\n" : "Account already exists.\n");
+                AccountCreationResult result = bank.createAccount(num, name, email, amount);
+                outputArea.appendText(result.getMessage() + "\n");
+                // Clear only relevant fields if account was created successfully
+                if (result.isSuccess()) {
+                    amountField.clear();  // Clear amount field after account creation
+                }
             } catch (NumberFormatException ex) {
                 outputArea.appendText("Invalid deposit amount.\n");
             }
@@ -60,6 +64,10 @@ public class BankingApp extends Application {
                 double amount = Double.parseDouble(amountField.getText());
                 boolean success = bank.deposit(num, amount);
                 outputArea.appendText(success ? "Deposit successful.\n" : "Deposit failed.\n");
+                // Optionally, clear only the amount field after a deposit
+                if (success) {
+                    amountField.clear();
+                }
             } catch (NumberFormatException ex) {
                 outputArea.appendText("Invalid amount.\n");
             }
@@ -71,7 +79,11 @@ public class BankingApp extends Application {
             try {
                 double amount = Double.parseDouble(amountField.getText());
                 boolean success = bank.withdraw(num, amount);
-                outputArea.appendText(success ? "Withdrawal successful.\n" : "Withdrawal failed. Insufficient funds. Please check your balance and try again.\n");
+                outputArea.appendText(success ? "Withdrawal successful.\n" : "Withdrawal failed. Insufficient funds.\n");
+                // Optionally, clear only the amount field after a withdrawal
+                if (success) {
+                    amountField.clear();
+                }
             } catch (NumberFormatException ex) {
                 outputArea.appendText("Invalid amount.\n");
             }

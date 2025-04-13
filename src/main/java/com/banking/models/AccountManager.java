@@ -10,12 +10,25 @@ public class AccountManager {
     }
 
     public void createAccount(String accountNumber, String name, String email, double initialBalance) {
-        if (!accounts.containsKey(accountNumber)) {
-            Account newAccount = new Account(accountNumber, name, email, initialBalance);
-            accounts.put(accountNumber, newAccount);
-            System.out.println("Account created successfully.");
-        } else {
-            System.out.println("Account with this number already exists.");
+        try {
+            validateAccountNumber(accountNumber);
+
+            if (!accounts.containsKey(accountNumber)) {
+                Account newAccount = new Account(accountNumber, name, email, initialBalance);
+                accounts.put(accountNumber, newAccount);
+                System.out.println("Account created successfully.");
+            } else {
+                System.out.println("Account with this number already exists.");
+            }
+
+        } catch (InvalidAccountNumberException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private void validateAccountNumber(String accountNumber) throws InvalidAccountNumberException {
+        if (!accountNumber.matches("\\d{8}")) {
+            throw new InvalidAccountNumberException("Account number must be exactly 8 digits (numbers only).");
         }
     }
 
@@ -52,5 +65,5 @@ public class AccountManager {
             }
         }
         return false;
-    }    
+    }
 }

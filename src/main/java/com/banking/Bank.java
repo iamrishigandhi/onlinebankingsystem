@@ -4,16 +4,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.banking.models.Account;
+import com.banking.models.AccountCreationResult;
 import com.banking.models.InsufficientFundsException;
 
 public class Bank {
     private final Map<String, Account> accounts = new HashMap<>();
 
     // Create a new account
-    public boolean createAccount(String number, String name, String email, double initialDeposit) {
-        if (accounts.containsKey(number)) return false;  // Check if account exists
-        accounts.put(number, new Account(number, name, email, initialDeposit));
-        return true;
+    public AccountCreationResult createAccount(String number, String name, String email, double initialDeposit) {
+    if (!isValidAccountNumber(number)) {
+        return new AccountCreationResult(false, "Account number must be exactly 8 digits and contain only numbers.");
+    }
+
+    if (accounts.containsKey(number)) {
+        return new AccountCreationResult(false, "Account with this number already exists.");
+    }
+
+    accounts.put(number, new Account(number, name, email, initialDeposit));
+    return new AccountCreationResult(true, "Account created successfully.");
+    }
+
+    // Account number validation method
+    private boolean isValidAccountNumber(String number) {
+        return number.matches("\\d{8}");
     }
 
     // Deposit money into an account
