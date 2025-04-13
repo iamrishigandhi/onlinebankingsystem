@@ -100,6 +100,14 @@ public class BankingApp extends Application {
             }
         });
 
+        Button clearBtn = new Button("Clear Fields");
+        clearBtn.setOnAction(e -> {
+            accNumField.clear();
+            nameField.clear();
+            emailField.clear();
+            amountField.clear();
+        });
+
         // Layout
         VBox layout = new VBox(10,
                 accNumField, nameField, emailField, amountField,

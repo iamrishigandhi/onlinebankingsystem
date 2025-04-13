@@ -33,11 +33,15 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- JavaFX Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -54,7 +58,6 @@
                 </executions>
             </plugin>
 
-            <!-- Optional: Exec Plugin for non-JavaFX runs -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
