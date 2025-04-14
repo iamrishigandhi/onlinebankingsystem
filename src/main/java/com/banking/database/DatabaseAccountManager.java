@@ -32,15 +32,7 @@ public class DatabaseAccountManager {
     }
 
     public Account getAccount(String accountNumber) throws InvalidAccountNumberException {
-        if (accountNumber == null || accountNumber.isEmpty()) {
-            throw new InvalidAccountNumberException("Account number cannot be empty.");
-        }
-        if (!accountNumber.matches("\\d+")) {
-            throw new InvalidAccountNumberException("Account number must contain only numeric characters.");
-        }
-        if (accountNumber.length() < 8) {
-            throw new InvalidAccountNumberException("Account number must be at least 8 digits long.");
-        }
+        validateAccountNumber(accountNumber);
 
         String sql = "SELECT * FROM accounts WHERE account_number = ?";
 
@@ -48,6 +40,7 @@ public class DatabaseAccountManager {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, accountNumber);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 return new Account(
                     rs.getString("account_number"),
@@ -63,7 +56,7 @@ public class DatabaseAccountManager {
             System.out.println("Error fetching account: " + e.getMessage());
             throw new InvalidAccountNumberException("Database error occurred while fetching account.");
         }
-    }    
+    }
 
     public boolean updateBalance(String accountNumber, double newBalance) {
         String sql = "UPDATE accounts SET balance = ? WHERE account_number = ?";
@@ -80,6 +73,26 @@ public class DatabaseAccountManager {
         } catch (SQLException e) {
             System.out.println("Error updating balance: " + e.getMessage());
             return false;
+        }
+    }
+
+    public void validateAccountNumber(String accountNumber) throws InvalidAccountNumberException {
+        StringBuilder errorMsg = new StringBuilder();
+
+        if (accountNumber == null || accountNumber.isEmpty()) {
+            errorMsg.append("Account number cannot be empty.\n");
+        }
+
+        if (accountNumber != null && !accountNumber.matches("\\d+")) {
+            errorMsg.append("Account number must contain only numeric characters.\n");
+        }
+
+        if (accountNumber != null && accountNumber.length() < 8) {
+            errorMsg.append("Account number must be at least 8 digits long.\n");
+        }
+
+        if (errorMsg.length() > 0) {
+            throw new InvalidAccountNumberException(errorMsg.toString());
         }
     }
 }

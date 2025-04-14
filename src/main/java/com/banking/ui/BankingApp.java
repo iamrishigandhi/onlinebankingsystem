@@ -1,7 +1,8 @@
 package com.banking.ui;
 
 import com.banking.database.DatabaseAccountManager;
-import com.banking.exceptions.*;
+import com.banking.exceptions.InsufficientFundsException;
+import com.banking.exceptions.InvalidAccountNumberException;
 import com.banking.models.Account;
 
 import javafx.application.Application;
@@ -45,9 +46,13 @@ public class BankingApp extends Application {
             String name = nameField.getText();
             String email = emailField.getText();
             double amount;
+        
             try {
+                // Validate the account number
+                dbManager.validateAccountNumber(num);
+        
                 amount = Double.parseDouble(amountField.getText());
-
+        
                 // Create Account in the Database
                 Account account = new Account(num, name, email, amount);
                 boolean success = dbManager.createAccount(account);
@@ -56,7 +61,9 @@ public class BankingApp extends Application {
                 } else {
                     outputArea.appendText("Account creation failed. The account already exists.\n");
                 }
-
+        
+            } catch (InvalidAccountNumberException ex) {
+                outputArea.appendText("Error: " + ex.getMessage() + "\n");
             } catch (NumberFormatException ex) {
                 outputArea.appendText("Invalid deposit amount.\n");
             }
