@@ -66,16 +66,6 @@ onlinebankingsystem/
 
 ---
 
-## 🧪 Sample Output
-
-```
-Account created successfully.
-Account created successfully.
-Account{accountNumber='1002', accountHolderName='Bob Johnson', email='bob@example.com', balance=700.0}
-Account{accountNumber='1001', accountHolderName='Alice Smith', email='alice@example.com', balance=700.0}
-It works!
-```
-
 ---
 
 ## 📌 Notes
