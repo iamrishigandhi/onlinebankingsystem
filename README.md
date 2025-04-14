@@ -66,8 +66,6 @@ onlinebankingsystem/
 
 ---
 
----
-
 ## 📌 Notes
 
 - You can extend this project by adding persistence (e.g., file-based or database).
