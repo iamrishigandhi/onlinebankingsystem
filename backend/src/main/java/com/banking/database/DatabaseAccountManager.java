@@ -76,6 +76,20 @@ public class DatabaseAccountManager {
         }
     }
 
+    public boolean accountExists(String accountNumber) {
+        String sql = "SELECT 1 FROM accounts WHERE account_number = ?";
+    
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, accountNumber);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            System.out.println("Error checking account existence: " + e.getMessage());
+            return false;
+        }
+    }
+    
     public void validateAccountNumber(String accountNumber) throws InvalidAccountNumberException {
         StringBuilder errorMsg = new StringBuilder();
 

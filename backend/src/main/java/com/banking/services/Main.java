@@ -1,4 +1,4 @@
-package com.banking.service;
+package com.banking.services;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,10 +1,10 @@
 com\banking\exceptions\InvalidAccountNumberException.class
-com\banking\models\AccountManager.class
 com\banking\exceptions\InsufficientFundsException.class
 com\banking\models\Account.class
-com\banking\service\Main.class
-com\banking\service\Bank.class
+com\banking\services\Bank.class
 com\banking\models\AccountCreationResult.class
 com\banking\database\DatabaseAccountManager.class
-com\banking\ui\BankingApp.class
 com\banking\utils\DBUtil.class
+com\banking\api\AccountController.class
+com\banking\api\OnlineBankingApplication.class
+com\banking\services\Main.class
