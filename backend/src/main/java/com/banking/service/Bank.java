@@ -3,7 +3,6 @@ package com.banking.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.banking.exceptions.InsufficientFundsException;
 import com.banking.models.Account;
 import com.banking.models.AccountCreationResult;
 
@@ -36,23 +35,6 @@ public class Bank {
         if (acc != null && amount > 0) {
             acc.deposit(amount);
             return true;
-        }
-        return false;
-    }
-
-    // Withdraw money from an account
-    public boolean withdraw(String number, double amount) {
-        Account acc = accounts.get(number);
-        if (acc != null && amount > 0) {
-            try {
-                // Try withdrawing the amount
-                acc.withdraw(amount);
-                return true;  // Withdrawal successful
-            } catch (InsufficientFundsException e) {
-                // Handle insufficient funds
-                System.out.println(e.getMessage());
-                return false;  // Withdrawal failed due to insufficient funds
-            }
         }
         return false;
     }
