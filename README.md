@@ -146,5 +146,4 @@ Navigate to `http://localhost:5173` to test the UI.
 
 ## 📜 License
 
-This project is licensed under the MIT License.
-```
+This project is licensed under the MIT [License](https://github.com/iamrishigandhi/onlinebankingsystem/blob/main/LICENSE).
