@@ -22,6 +22,7 @@ function App() {
       });
 
       const data = await response.json();
+      console.log('Response from backend:', data);
       if (response.ok) {
         alert(`Account created successfully! Your account number is: ${data.accountNumber}`);
       } else {

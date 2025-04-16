@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.banking.api.response.AccountResponse;
+import com.banking.api.response.ErrorResponse;
 import com.banking.database.DatabaseAccountManager;
 import com.banking.models.Account;
 
@@ -26,7 +28,7 @@ public class AccountController {
         // Generate a unique 8-digit account number
         String accountNumber;
         do {
-            accountNumber = String.format("%12d", random.nextInt(100_000_000));
+            accountNumber = String.format("%012d", random.nextInt(1_000_000_000));
         } while (dbManager.accountExists(accountNumber));
 
         // Create and store the account
@@ -37,6 +39,7 @@ public class AccountController {
         if (success) {
             return new AccountResponse(accountNumber, "Account created successfully.");
         } else {
+            System.out.println("Failed to create account for email: " + email);
             return new ErrorResponse("Account creation failed.");
         }
     }
@@ -49,24 +52,5 @@ public class AccountController {
         public String getPassword() { return password; }
         public void setEmail(String email) { this.email = email; }
         public void setPassword(String password) { this.password = password; }
-    }
-
-    static class AccountResponse {
-        private final String accountNumber;
-        private final String message;
-        public AccountResponse(String accountNumber, String message) {
-            this.accountNumber = accountNumber;
-            this.message = message;
-        }
-        public String getAccountNumber() { return accountNumber; }
-        public String getMessage() { return message; }
-    }
-
-    static class ErrorResponse {
-        private final String message;
-        public ErrorResponse(String message) {
-            this.message = message;
-        }
-        public String getMessage() { return message; }
     }
 }

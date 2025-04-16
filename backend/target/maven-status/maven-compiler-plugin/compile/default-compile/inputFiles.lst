@@ -1,6 +1,11 @@
 C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\api\AccountController.java
+C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\api\dto\CreateAccountRequest.java
+C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\api\dto\CreateAccountResponse.java
 C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\api\HealthCheckController.java
 C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\api\OnlineBankingApplication.java
+C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\api\response\AccountResponse.java
+C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\api\response\ErrorResponse.java
+C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\config\WebConfig.java
 C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\database\DatabaseAccountManager.java
 C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\exceptions\InsufficientFundsException.java
 C:\Users\rishi\source\Repos\onlinebankingsystem\backend\src\main\java\com\banking\exceptions\InvalidAccountNumberException.java
